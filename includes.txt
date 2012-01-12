@@ -1,0 +1,11 @@
+/backup
+/etc
+/home
+/mnt
+/root
+/srv
+/usr/local
+/var/backups
+/var/lib
+/var/log
+/var/www
