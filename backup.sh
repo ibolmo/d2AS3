@@ -8,8 +8,8 @@ AWS_SECRET_ACCESS_KEY="<your secret key>"
 # This needs to be a newline separated list of files and directories to backup
 INCLUDEFILES="./includes.txt"
 
-S3FILESYSLOCATION="s3+http://<your file bucket>"
-S3MYSQLLOCATION="s3+http://<your mysql bucket>"
+S3FILESYSLOCATION="s3+http://$(hostname).s3.amazonaws.com"
+S3MYSQLLOCATION="s3+http://$(hostname).s3.amazonaws.com"
 S3OPTIONS="--s3-use-new-style"
 
 EXTRADUPLICITYOPTIONS=
