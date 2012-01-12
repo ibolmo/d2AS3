@@ -10,7 +10,7 @@ INCLUDEFILES="./includes.txt"
 
 S3FILESYSLOCATION="s3+http://<your file bucket>"
 S3MYSQLLOCATION="s3+http://<your mysql bucket>"
-S3OPTIONS="--s3-use-new-style --s3-use-rrs"
+S3OPTIONS="--s3-use-new-style"
 
 EXTRADUPLICITYOPTIONS=
 
