@@ -14,8 +14,8 @@ S3OPTIONS="--s3-use-new-style"
 
 EXTRADUPLICITYOPTIONS=
 
-FULLDAYS="30D"
-MAXFULL=3
+FULLDAYS="14D"
+MAXFULL=2
 
 ### MySQL Setup ###
 MUSER="<your mysql user>"
