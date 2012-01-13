@@ -3,13 +3,13 @@
 ### Duplicity Setup ###
 PASSPHRASE="<your passphrase>"
 AWS_ACCESS_KEY_ID="<your key id>"
-AWS_SECRET_ACCESS_KEY="<your secret key>"
+AWS_SECRET_ACCESS_KEY="<your access key>"
 
 # This needs to be a newline separated list of files and directories to backup
 INCLUDEFILES="./includes.txt"
 
-S3FILESYSLOCATION="s3+http://$(hostname).s3.amazonaws.com"
-S3MYSQLLOCATION="s3+http://$(hostname).s3.amazonaws.com"
+S3FILESYSLOCATION="s3+http://$(hostname)"
+S3MYSQLLOCATION="s3+http://$(hostname)"
 S3OPTIONS="--s3-use-new-style"
 
 EXTRADUPLICITYOPTIONS=
@@ -24,7 +24,7 @@ MHOST="localhost"
 
 ### Disable MySQL ###
 # Change to 0 to disable
-BACKUPMYSQL=1
+BACKUPMYSQL=0
 
 ###### End Of Editable Parts ######
 
@@ -38,7 +38,7 @@ export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 
 ### Commands ###
 if [[ -n "$BACKUPMYSQL" && "$BACKUPMYSQL" -gt 0 ]]; then
- MYSQLTMPDIR="$(mktemp -d)"
+ MYSQLTMPDIR="$(mktemp -d -t d2AS3)"
  MYSQL="$(which mysql)"
  MYSQLDUMP="$(which mysqldump)"
  GZIP="$(which gzip)"
@@ -51,7 +51,8 @@ if [[ -n "$BACKUPMYSQL" && "$BACKUPMYSQL" -gt 0 ]]; then
   exit 2
  fi
 fi
-if [ -n "$DUPLICITY"  ]; then
+
+if [[ -z "$DUPLICITY"  ]]; then
  echo "Duplicity not found."
  exit 2
 fi
@@ -70,22 +71,22 @@ fi
 
 ### Backup files ###
 if [ -n "$S3FILESYSLOCATION" ]; then
- $DUPLICITY --full-if-older-than $FULLDAYS $S3OPTIONS $EXTRADUPLICITYOPTIONS --include-globbing-filelist $INCLUDEFILES --exclude '**' / $S3FILESYSLOCATION
+ $DUPLICITY --full-if-older-than $FULLDAYS $S3OPTIONS --name=files $EXTRADUPLICITYOPTIONS --include-globbing-filelist $INCLUDEFILES --exclude '**' / $S3FILESYSLOCATION
 fi
 if [[ -n "$BACKUPMYSQL" && "$BACKUPMYSQL" -gt 0 ]]; then
  if [ -n "$S3MYSQLLOCATION" ]; then
-  $DUPLICITY --full-if-older-than $FULLDAYS $S3OPTIONS $EXTRADUPLICITYOPTIONS --allow-source-mismatch $MYSQLTMPDIR $S3MYSQLLOCATION
+  $DUPLICITY --full-if-older-than $FULLDAYS $S3OPTIONS --name=mysql $EXTRADUPLICITYOPTIONS --allow-source-mismatch $MYSQLTMPDIR $S3MYSQLLOCATION
  fi
 fi
 
 ### Cleanup ###
 if [[ -n "$MAXFULL" && "$MAXFULL" -gt 0 ]]; then
  if [ -n "$S3FILESYSLOCATION" ]; then
-  $DUPLICITY remove-all-but-n-full $MAXFULL $S3FILESYSLOCATION
+  $DUPLICITY remove-all-but-n-full $MAXFULL  --name=files $S3FILESYSLOCATION
  fi
  if [[ -n "$BACKUPMYSQL" && "$BACKUPMYSQL" -gt 0 ]]; then
   if [ -n "$S3MYSQLLOCATION" ]; then
-   $DUPLICITY remove-all-but-n-full $MAXFULL $S3MYSQLLOCATION
+   $DUPLICITY remove-all-but-n-full $MAXFULL --name=mysql $S3MYSQLLOCATION
   fi
  fi
 fi
