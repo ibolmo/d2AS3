@@ -1,9 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 
 ### Duplicity Setup ###
-PASSPHRASE="<your passphrase>"
-AWS_ACCESS_KEY_ID="<your key id>"
-AWS_SECRET_ACCESS_KEY="<your access key>"
+if [ ! -f source.sh ];
+then 
+  echo "File source.sh does not exist."
+  exit 1
+fi 
+
+source source.sh
 
 # This needs to be a newline separated list of files and directories to backup
 INCLUDEFILES="./includes.txt"
@@ -12,7 +16,7 @@ S3FILESYSLOCATION="s3+http://$(hostname)"
 S3MYSQLLOCATION="s3+http://$(hostname)"
 S3OPTIONS="--s3-use-new-style"
 
-EXTRADUPLICITYOPTIONS=
+EXTRADUPLICITYOPTIONS="-v8"
 
 FULLDAYS="14D"
 MAXFULL=2
