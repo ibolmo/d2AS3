@@ -9,29 +9,6 @@ fi
 
 source ./config.sh
 
-# This needs to be a newline separated list of files and directories to backup
-INCLUDEFILES="./includes.txt"
-
-S3FILESYSLOCATION="s3+http://$(hostname)"
-S3MYSQLLOCATION="s3+http://$(hostname)"
-S3OPTIONS="--s3-use-new-style"
-
-EXTRADUPLICITYOPTIONS="-v8"
-
-FULLDAYS="14D"
-MAXFULL=2
-
-### MySQL Setup ###
-MUSER="<your mysql user>"
-MPASS="<mysql user's password>"
-MHOST="localhost"
-
-### Disable MySQL ###
-# Change to 0 to disable
-BACKUPMYSQL=0
-
-###### End Of Editable Parts ######
-
 ### Env Vars ###
 PASSPHRASE_OLD="$(echo $PASSPHRASE)"
 AWS_ACCESS_KEY_ID_OLD="$(echo $AWS_ACCESS_KEY_ID)"

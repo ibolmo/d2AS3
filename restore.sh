@@ -9,13 +9,6 @@ fi
 
 source config.sh
 
-S3FILESYSLOCATION="s3+http://$(hostname)"
-S3OPTIONS="--s3-use-new-style"
-
-EXTRADUPLICITYOPTIONS=""
-
-###### End Of Editable Parts ######
-
 ### Env Vars ###
 
 PASSPHRASE_OLD="$(echo $PASSPHRASE)"
