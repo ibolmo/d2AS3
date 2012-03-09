@@ -1,9 +1,13 @@
 #!/bin/bash
 
 ### Duplicity Setup ###
-PASSPHRASE="<your passphrase>"
-AWS_ACCESS_KEY_ID="<your access key id>"
-AWS_SECRET_ACCESS_KEY="<your secret access key>"
+if [ ! -f source.sh ];
+then 
+  echo "File source.sh does not exist."
+  exit 1
+fi 
+
+source source.sh
 
 S3FILESYSLOCATION="s3+http://$(hostname)"
 S3OPTIONS="--s3-use-new-style"
