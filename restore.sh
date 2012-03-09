@@ -1,13 +1,13 @@
 #!/bin/bash
 
 ### Duplicity Setup ###
-if [ ! -f config.sh ];
+if [ ! -f setup.sh ];
 then 
-  echo "File config.sh does not exist."
+  echo "File setup.sh does not exist."
   exit 1
 fi 
 
-source config.sh
+source setup.sh
 
 ### Env Vars ###
 
