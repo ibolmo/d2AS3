@@ -1,13 +1,13 @@
 #!/bin/bash
 
 ### Duplicity Setup ###
-if [ ! -f source.sh ];
+if [ ! -f config.sh ];
 then 
-  echo "File source.sh does not exist."
+  echo "File config.sh does not exist."
   exit 1
 fi 
 
-source source.sh
+source config.sh
 
 S3FILESYSLOCATION="s3+http://$(hostname)"
 S3OPTIONS="--s3-use-new-style"

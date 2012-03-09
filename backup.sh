@@ -1,13 +1,13 @@
 #!/bin/bash
 
 ### Duplicity Setup ###
-if [ ! -f source.sh ];
+if [ ! -f ./config.sh ];
 then 
-  echo "File source.sh does not exist."
+  echo "File config.sh does not exist."
   exit 1
 fi 
 
-source source.sh
+source ./config.sh
 
 # This needs to be a newline separated list of files and directories to backup
 INCLUDEFILES="./includes.txt"
