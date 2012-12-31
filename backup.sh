@@ -1,13 +1,15 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+
 ### Duplicity Setup ###
-if [ ! -f ./setup.sh ];
+if [ ! -f $DIR/setup.sh ];
 then 
   echo "File setup.sh does not exist."
   exit 1
 fi 
 
-source ./setup.sh
+source $DIR/setup.sh
 
 ### Env Vars ###
 PASSPHRASE_OLD="$(echo $PASSPHRASE)"
@@ -19,7 +21,8 @@ export AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 
 ### Commands ###
 if [[ -n "$BACKUPMYSQL" && "$BACKUPMYSQL" -gt 0 ]]; then
- MYSQLTMPDIR="$(mktemp -d -t d2AS3)"
+ mkdir $DIR/mysql/
+ MYSQLTMPDIR="$DIR/mysql/"
  MYSQL="$(which mysql)"
  MYSQLDUMP="$(which mysqldump)"
  GZIP="$(which gzip)"
@@ -27,10 +30,10 @@ fi
 DUPLICITY="$(which duplicity)"
 
 if [[ -n "$BACKUPMYSQL" && "$BACKUPMYSQL" -gt 0 ]]; then
- if [[ -n "$MYSQL" || -n "$MYSQL" || -n "$MYSQLDUMP" || -n "$GZIP" ]]; then
+ if [[ -z "$MYSQL" || -z "$MYSQLDUMP" || -z "$GZIP" ]]; then
   echo "Not all MySQL commands found."
   exit 2
- fi
+fi
 fi
 
 if [[ -z "$DUPLICITY"  ]]; then
@@ -51,14 +54,17 @@ if [[ -n "$BACKUPMYSQL" && "$BACKUPMYSQL" -gt 0 ]]; then
 fi
 
 ### Backup files ###
-if [ -n "$S3FILESYSLOCATION" ]; then
- $DUPLICITY --full-if-older-than $FULLDAYS $S3OPTIONS --name=files $EXTRADUPLICITYOPTIONS --include-globbing-filelist $INCLUDEFILES --exclude '**' / $S3FILESYSLOCATION
-fi
-if [[ -n "$BACKUPMYSQL" && "$BACKUPMYSQL" -gt 0 ]]; then
- if [ -n "$S3MYSQLLOCATION" ]; then
-  $DUPLICITY --full-if-older-than $FULLDAYS $S3OPTIONS --name=mysql $EXTRADUPLICITYOPTIONS --allow-source-mismatch $MYSQLTMPDIR $S3MYSQLLOCATION
+if [[ -n "$BACKUPFILES" && "$BACKUPFILES" -gt 0 ]]; then
+  if [ -n "$S3FILESYSLOCATION" ]; then
+   $DUPLICITY --full-if-older-than $FULLDAYS $S3OPTIONS $EXTRADUPLICITYOPTIONS --allow-source-mismatch --include-globbing-filelist $INCLUDEFILES --exclude '**' / $S3FILESYSLOCATION
  fi
 fi
+
+if [[ -n "$BACKUPMYSQL" && "$BACKUPMYSQL" -gt 0 ]]; then
+  if [ -n "$S3MYSQLLOCATION" ]; then
+    $DUPLICITY --full-if-older-than $FULLDAYS $S3OPTIONS $EXTRADUPLICITYOPTIONS --allow-source-mismatch $MYSQLTMPDIR $S3MYSQLLOCATION
+  fi  
+fi  
 
 ### Cleanup ###
 if [[ -n "$MAXFULL" && "$MAXFULL" -gt 0 ]]; then
