@@ -4,10 +4,10 @@ AWS_ACCESS_KEY_ID=""
 AWS_SECRET_ACCESS_KEY=""
 
 # This needs to be a newline separated list of files and directories to backup
-INCLUDEFILES="./includes.txt"
+INCLUDEFILES="$DIR/includes.txt"
 
-S3FILESYSLOCATION="s3+http://$(hostname)"
-S3MYSQLLOCATION="s3+http://$(hostname)"
+S3FILESYSLOCATION="s3+http://$(hostname)/files"
+S3MYSQLLOCATION="s3+http://$(hostname)/mysql"
 S3OPTIONS="--s3-use-new-style"
 
 EXTRADUPLICITYOPTIONS=""
@@ -22,5 +22,6 @@ MHOST="localhost"
 
 ### Disable MySQL ###
 # Change to 0 to disable
-BACKUPMYSQL=0
+BACKUPMYSQL=1
+BACKUPFILES=1
 
