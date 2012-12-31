@@ -1,13 +1,15 @@
 #!/bin/bash
 
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+
 ### Duplicity Setup ###
-if [ ! -f setup.sh ];
+if [ ! -f $DIR/setup.sh ];
 then 
   echo "File setup.sh does not exist."
   exit 1
 fi 
 
-source setup.sh
+source $DIR/setup.sh
 
 ### Env Vars ###
 
@@ -31,5 +33,5 @@ if [[ -z "$1" ]]; then
 fi
 
 if [ -n "$S3FILESYSLOCATION" ]; then
- $DUPLICITY $S3OPTIONS --name=files $EXTRADUPLICITYOPTIONS $S3FILESYSLOCATION $1
+ $DUPLICITY $S3OPTIONS $EXTRADUPLICITYOPTIONS $S3FILESYSLOCATION $1
 fi
